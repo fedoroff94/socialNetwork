@@ -1,0 +1,14 @@
+.text {
+    width: 200px;
+    height: 150px;
+}
+
+.button {
+   border-radius: 15px;
+   width: 100px;
+   height: 30px;
+}
+
+.post {
+    padding: 10px;
+}

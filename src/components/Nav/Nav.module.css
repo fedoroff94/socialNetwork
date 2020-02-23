@@ -1,0 +1,15 @@
+/* navigation bar */
+.nav {
+    grid-area: n;
+    background-color: gold;
+    padding: 20px;
+}
+
+a {
+    color: white;
+}
+
+a.activeLink {
+    color: red;
+}
+

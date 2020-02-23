@@ -1,0 +1,21 @@
+.content {
+    font-family: cursive;
+    color: red;
+}
+
+.dialogs {
+display: grid;
+grid-template-columns: 2fr 15fr;
+}
+
+.dialogItems .dialog {
+
+}
+
+div.messages {
+
+}
+
+.message {
+
+}
