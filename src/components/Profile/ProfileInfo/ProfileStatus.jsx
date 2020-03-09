@@ -2,12 +2,6 @@ import React from 'react';
 
 class ProfileStatus extends React.Component {
 
-    // constructor(props){
-    //     super(props);
-
-    // }
-    // inputStatusRef = React.createRef();
-
     state = {
         editMode: false,
         status: this.props.status

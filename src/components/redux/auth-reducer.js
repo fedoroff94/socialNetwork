@@ -24,19 +24,16 @@ const authReducer = (state = initialState, action) => {
 
 export const setUserData = (id, login, email, isAuth) => ({type: SET_USER_DATA, payload: {id, login, email, isAuth}}); //actionCreator
 
-export const setUserDataTC = () => (dispatch) => {
-        return authAPI.authMe()
-            .then(response => {
+export const setUserDataTC = () => async (dispatch) => {
+        let response = await authAPI.authMe();
                 if (response.data.resultCode === 0) {
                     let {id, login, email} = response.data.data;
                     dispatch(setUserData(id, login, email, true));
                 }
-            });
     }
 
-export const login = (email, password, rememberMe) => (dispatch) => {
-    authAPI.login(email, password, rememberMe)
-        .then(response => {
+export const login = (email, password, rememberMe) => async (dispatch) => {
+    let response = await authAPI.login(email, password, rememberMe);
             if (response.data.resultCode === 0) {
                 dispatch(setUserDataTC());
             } else {
@@ -44,16 +41,13 @@ export const login = (email, password, rememberMe) => (dispatch) => {
                 dispatch(stopSubmit('login', {_error: message}));
                 //'login' из form: 'login' в Login reduxForm, второе поле - проблемное, _error - общая ошибка для всех филдов
             }
-        });
 }
 
-export const logout = () => (dispatch) => {
-    authAPI.logout()
-        .then(response => {
+export const logout = () => async (dispatch) => {
+    let response = await authAPI.logout()
             if (response.data.resultCode === 0) {
                 dispatch(setUserData(null, null, null, false));
             }
-        });
 }
 
 export default authReducer;

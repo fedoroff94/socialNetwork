@@ -1,50 +1,61 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Users from './Users';
-import { follow, unfollow, followSuccess, unfollowSuccess, getUsers, setCurrentPage, toggleFollowingInProgress } from '../redux/users-reducer';
+import {
+    follow,
+    unfollow,
+    followSuccess,
+    unfollowSuccess,
+    getUsers,
+    setCurrentPage,
+    toggleFollowingInProgress
+} from '../redux/users-reducer';
 import Preloader from '../../assets/common/Preloader/Preloader';
-import { withAuthRedirect } from '../../HOC/withAuthRedirect';
+import {withAuthRedirect} from '../../HOC/withAuthRedirect';
 import {compose} from 'redux';
 import {
     getCurrentPage,
     getFollowingInProgress,
     getIsFetching,
-    getPageSize,
+    getPageSize, getPortionSize,
     getTotalUsersCount,
-    getUsersSelect
+    getUsersS
 } from "../redux/users-selectors";
 
 
-class UsersContainer extends React.Component { 
+class UsersContainer extends React.Component {
 
     componentDidMount() {
-        this.props.getUsers(this.props.currentPage, this.props.pageSize);
+        let {currentPage, pageSize} = this.props;
+        this.props.getUsers(currentPage, pageSize);
     }
 
     onPageChanged = (pageNumber) => {
-        this.props.getUsers(pageNumber, this.props.pageSize);
+        let {pageSize} = this.props;
+        this.props.getUsers(pageNumber, pageSize);
     }
 
-    render(){
+    render() {
         return <>
-        <div className='preloader'>{this.props.isFetching
-        ? <Preloader/>
-        : null}
-        </div>
-        
-        <Users totalUsersCount={this.props.totalUsersCount}
-        pageSize={this.props.pageSize}
-        currentPage={this.props.currentPage}
-        onPageChanged={this.onPageChanged}
-        users={this.props.users}
-        isFetching={this.props.isFetching}
-        followSuccess={this.props.followSuccess}
-        unfollowSuccess={this.props.unfollowSuccess}
-        toggleFollowingInProgress={this.props.toggleFollowingInProgress}
-        followingInProgress={this.props.followingInProgress}
-        follow={this.props.follow}
-        unfollow={this.props.unfollow}
-        />
+            <div className='preloader'>{this.props.isFetching
+                ? <Preloader/>
+                : null}
+            </div>
+
+            <Users totalItemsCount={this.props.totalItemsCount}
+                   pageSize={this.props.pageSize}
+                   currentPage={this.props.currentPage}
+                   onPageChanged={this.onPageChanged}
+                   users={this.props.users}
+                   isFetching={this.props.isFetching}
+                   followSuccess={this.props.followSuccess}
+                   unfollowSuccess={this.props.unfollowSuccess}
+                   toggleFollowingInProgress={this.props.toggleFollowingInProgress}
+                   followingInProgress={this.props.followingInProgress}
+                   follow={this.props.follow}
+                   unfollow={this.props.unfollow}
+                   portionSize={this.props.portionSize}
+            />
         </>
     }
 }
@@ -62,19 +73,22 @@ class UsersContainer extends React.Component {
 
 let mapStateToProps = (state) => { // use selectors
     return {
-        users: getUsersSelect(state),
+        users: getUsersS(state),
         pageSize: getPageSize(state),
-        totalUsersCount: getTotalUsersCount(state),
+        totalItemsCount: getTotalUsersCount(state),
         currentPage: getCurrentPage(state),
         isFetching: getIsFetching(state),
-        followingInProgress: getFollowingInProgress(state)
+        followingInProgress: getFollowingInProgress(state),
+        portionSize: getPortionSize(state)
     }
 }
 
 export default compose(
-    connect(mapStateToProps, {follow, unfollow, followSuccess, unfollowSuccess, // 2
+    connect(mapStateToProps, {
+        follow, unfollow, followSuccess, unfollowSuccess, // 2
         setCurrentPage, toggleFollowingInProgress,
-        getUsers: getUsers}),
+        getUsers
+    }),
     withAuthRedirect // 1
 )(UsersContainer); // компонента, которая оборачивается (исходная)
 

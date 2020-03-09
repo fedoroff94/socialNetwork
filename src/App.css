@@ -25,11 +25,7 @@
   height: 100px;
 }
 
-.selectedPage {
-  font-weight: bold;
-}
-
-.pointer {
+.paginator {
   cursor: pointer;
 }
 

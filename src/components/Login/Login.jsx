@@ -1,6 +1,6 @@
 import React from 'react';
 import {Field, reduxForm} from "redux-form";
-import {Input} from "../../assets/common/FormsControls/FormsControls";
+import {CreateField, Input} from "../../assets/common/FormsControls/FormsControls";
 import {MaxLengthCreator, required} from "../../utils/validators/validstors";
 import {connect} from "react-redux";
 import {login} from "../redux/auth-reducer";
@@ -9,23 +9,19 @@ import classes from './Login.module.css';
 
 const maxLength30 = MaxLengthCreator(30);
 
-const LoginForm = (props) => {
+const LoginForm = ({handleSubmit, error}) => {
     return (
-        <form onSubmit={props.handleSubmit}>
-            <div>
-                <Field validate={[required, maxLength30]} type="text" placeholder={'Email'} component={Input}
-                       name={'Email'}/>
-            </div>
-            <div>
-                <Field validate={[required, maxLength30]} type="text" placeholder={'Password'} component={Input}
-                       name={'Password'} type={'password'}/>
-            </div>
-            <div>
-                <Field type="checkbox" component={Input} name={'rememberMe'}/> remember me.
-            </div>
-            {props.error &&
+        <form onSubmit={handleSubmit}>
+            {CreateField('Email', 'Email', [required], Input, {type: 'text'})}
+            {CreateField('Password', 'Password', [required], Input, {type: 'password'})}
+            {CreateField(null, 'rememberMe', [], Input, {type: 'checkbox'}, 'remember me')}
+
+            {/*<Field validate={[required, maxLength30]} type="text" placeholder={'Email'} component={Input}*/}
+            {/*       name={'Email'}/>*/}
+
+            {error &&
             <div className={classes.summaryError}>
-                {props.error}
+                {error}
             </div>
             }
             <div>
@@ -44,7 +40,7 @@ const Login = (props) => {
         props.login(formData.Email, formData.Password, formData.rememberMe);
     }
 
-    if(props.isAuth){
+    if (props.isAuth) {
         return <Redirect to='/profile'/>
     }
 
