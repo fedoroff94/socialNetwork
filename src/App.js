@@ -59,7 +59,7 @@ const AppContainer = compose(
     connect(mapStateToProps, {initializeApp}))(App);
 
 const SamuraiJSApp = (props) => {
-    return <BrowserRouter>
+    return <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Provider store={store}>
             <AppContainer/>
         </Provider>
@@ -67,4 +67,6 @@ const SamuraiJSApp = (props) => {
 }
 
 export default SamuraiJSApp;
+
+
 

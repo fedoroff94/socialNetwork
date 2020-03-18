@@ -10,5 +10,19 @@ div img.sec {
 
 .profilephoto {
     width: 200px;
-    height: 150px;
+    height: 200px;
+    border-radius: 50%;
+}
+
+.contact {
+    padding-left: 10px;
+}
+
+.summaryError {
+    border: 1px solid red;
+    color: red;
+}
+
+.photoLoad {
+    display: block;
 }
