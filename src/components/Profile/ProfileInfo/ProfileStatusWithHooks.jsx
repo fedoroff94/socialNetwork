@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import {CreateField, Input} from "../../../assets/common/FormsControls/FormsControls";
+import {MaxLengthCreator} from "../../../utils/validators/validstors";
 
 const ProfileStatusWithHooks = (props) => {
 
@@ -21,6 +23,8 @@ const ProfileStatusWithHooks = (props) => {
     const onStatusChange = (e) => {
         setStatus(e.currentTarget.value);
     }
+
+    const MaxLength20 = MaxLengthCreator(20);
 
     return (
         <div>

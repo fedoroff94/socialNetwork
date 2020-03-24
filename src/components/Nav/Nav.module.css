@@ -1,7 +1,7 @@
 /* navigation bar */
 .nav {
     grid-area: n;
-    background-color: gold;
+    background-color: #ffc177;
     padding: 20px;
 }
 
@@ -10,6 +10,6 @@ a {
 }
 
 a.activeLink {
-    color: red;
+    color: #ff000f;
 }
 

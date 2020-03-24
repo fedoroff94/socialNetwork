@@ -3,6 +3,7 @@ import classes from './ProfileInfo.module.css';
 import Preloader from '../../../assets/common/Preloader/Preloader';
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import ProfileDataForm from "./ProfileDataForm";
+import baseIcon from '../../../assets/images/avatar.jpg';
 
 const ProfileInfo = ({profile, status, updateUserStatus, saveProfile, isOwner, savePhoto}) => {
 
@@ -11,8 +12,6 @@ const ProfileInfo = ({profile, status, updateUserStatus, saveProfile, isOwner, s
     if (!profile) {
         return <Preloader/>
     }
-
-    let baseIcon = 'http://localhost:3000/static/media/user.8b1dbb1f.png';
 
     const onSubmit = (formData) => {
         saveProfile(formData).then(() => {

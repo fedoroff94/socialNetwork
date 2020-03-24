@@ -20,8 +20,17 @@ const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsCo
 
 class App extends React.Component {
 
+    catchAllUnhandledErrors = (reason, promise) => {
+        alert('Error!!! A lot of symbols!!!');
+    };
+
     componentDidMount() {
         this.props.initializeApp();
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors);
     }
 
     render() {
