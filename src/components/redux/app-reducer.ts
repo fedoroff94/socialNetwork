@@ -14,17 +14,17 @@ let initialState: InitialStateType = {
     initialized: false
 };
 
-const appReducer = (state = initialState, action: any): InitialStateType => {
+const appReducer = (state = initialState, action: SetInitializedActionType): InitialStateType => {
     switch (action.type) {
         case SET_INITIALIZED:
             return {
                 ...state,
                 initialized: true
-            }
+            };
         default:
             return state;
     }
-}
+};
 
 export const setInitialized = (): SetInitializedActionType => ({type: SET_INITIALIZED}); //actionCreator
 
@@ -34,6 +34,6 @@ export const initializeApp = () => (dispatch: any) => { //thunkCreator
         .then(() => {
             dispatch(setInitialized());
     })
-}
+};
 
 export default appReducer;

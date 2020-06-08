@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import preloader from '../../images/loading.gif';
 
-let Preloader = (props) => {
+type PropsType = {
+
+}
+
+let Preloader: FC<PropsType> = (props) => {
     return <div>
         <img src={preloader}/>
         </div>

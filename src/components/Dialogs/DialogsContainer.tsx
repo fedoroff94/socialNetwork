@@ -3,18 +3,19 @@ import { connect } from 'react-redux';
 import { withAuthRedirect } from '../../HOC/withAuthRedirect';
 import Dialogs from './Dialogs';
 import { compose } from 'redux';
+import { appStateType } from "../redux/redux-store";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: appStateType) => {
   return {
     dialogsPage: state.dialogsPage,
   }
-}
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    sendMessage: (newMessageBody) => {dispatch(sendMessageCreator(newMessageBody))}
+    sendMessage: (newMessageBody: string) => {dispatch(sendMessageCreator(newMessageBody))}
   }
-}
+};
 
 //High order Component --- HOC
 // let AuthRedirectComponent = withAuthRedirect(Dialogs);
@@ -24,4 +25,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withAuthRedirect
-)(Dialogs);;
+)(Dialogs);

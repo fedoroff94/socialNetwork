@@ -13,7 +13,7 @@ let reducers = combineReducers(
     {
         profilePage: profileReducer,
         dialogsPage: dialogsReducer,
-        newsPage: newsReducer,
+        // newsPage: newsReducer,
         sidebar: sidebarReducer,
         usersPage: usersReducer,
         auth: authReducer,
@@ -21,6 +21,9 @@ let reducers = combineReducers(
         app: appReducer
     }
 );
+
+type reducersType = typeof reducers; // (globalState: appStateType) => appStateType
+export type appStateType = ReturnType<reducersType>
 
 let store = createStore(reducers, applyMiddleware(thunkMiddleware));
 

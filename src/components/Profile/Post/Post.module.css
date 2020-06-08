@@ -1,8 +1,10 @@
 .item {
-      color: black;
+    color: black;
+    margin-bottom: 30px;
+    font-size: 13px;
 }
 
 div.item img {
-  width: 80px;
-  height: 80px;
+    width: 80px;
+    height: 80px;
 }

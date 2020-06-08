@@ -1,5 +1,5 @@
-import {authAPI, securityAPI} from '../../api/api';
-import {stopSubmit} from 'redux-form';
+import { authAPI, ResultCodeForCaptcha, ResultCodesEnum, securityAPI } from '../../api/api';
+import { stopSubmit } from 'redux-form';
 
 const SET_USER_DATA = 'SET-USER-DATA';
 const GET_CAPTCHA = 'GET-CAPTCHA';
@@ -48,7 +48,6 @@ type SetUserDataType = {
     payload: SetUserDataPayloadType
 }
 
-
 export const setUserData = (id: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataType =>
     ({type: SET_USER_DATA, payload: {id, login, email, isAuth}}); //actionCreator
 
@@ -64,24 +63,24 @@ type GetCaptchaType = {
 export const getCaptchaAC = (captchaUrl: string): GetCaptchaType  => ({type: GET_CAPTCHA, payload: {captchaUrl}});
 
 export const setUserDataTC = () => async (dispatch: any) => {
-    let response = await authAPI.authMe();
-    if (response.data.resultCode === 0) {
-        let {id, login, email} = response.data.data;
+    let resData = await authAPI.authMe();
+    if (resData.resultCode === ResultCodesEnum.Success) {
+        let {id, login, email} = resData.data;
         dispatch(setUserData(id, login, email, true));
     }
 }
 
-export const login = (email: string, password: number, rememberMe: boolean, captcha: string) => {
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => {
     return async (dispatch: any) => {
-        let response = await authAPI.login(email, password, rememberMe, captcha);
-        if (response.data.resultCode === 0) {
+        let loginData = await authAPI.login(email, password, rememberMe, captcha);
+        if (loginData.resultCode === ResultCodesEnum.Success) {
             dispatch(setUserDataTC());
         } else {
-            if (response.data.resultCode === 10) {
+            if (loginData.resultCode === ResultCodeForCaptcha.CaptchaIsRequired) {
                 dispatch(getCaptchaUrl());
             }
             //'login' из form: 'login' в Login reduxForm, второе поле - проблемное, _error - общая ошибка для всех филдов
-            let message = response.data.messages.length > 0 ? response.data.messages[0] : 'Some error!!!';
+            let message = loginData.messages.length > 0 ? loginData.messages[0] : 'Some error!!!';
             dispatch(stopSubmit('login', {_error: message}));
         }
     };
@@ -89,7 +88,7 @@ export const login = (email: string, password: number, rememberMe: boolean, capt
 
 export const logout = () => async (dispatch: any) => {
     let response = await authAPI.logout()
-    if (response.data.resultCode === 0) {
+    if (response.data.resultCode === ResultCodesEnum.Success) {
         dispatch(setUserData(null, null, null, false));
     }
 }

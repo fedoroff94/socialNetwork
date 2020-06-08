@@ -10,29 +10,30 @@ const SAVE_PHOTO = 'SAVE-PHOTO';
 
 let initialState = {
     posts: [
-        {id: 1, message: 'Hi, how are you?', likesCount: 12, dislikesCount: 3},
-        {id: 1, message: 'It is my first post', likesCount: 11, dislikesCount: 1}
+        {id: 1, message: 'The first post', likesCount: 1, dislikesCount: 1},
+        {id: 2, message: 'The second post', likesCount: 2, dislikesCount: 2}
     ] as Array<postType>,
     profile: null as profileType | null,
     status: '',
-    newPostsText: ''
-}
+    newPostText: ''
+};
 
 export type initialStateType = typeof initialState;
 
 const profileReducer = (state = initialState, action: any): initialStateType => {
     switch (action.type) {
         case ADD_POST: {
+            debugger
             let newPost = {
-                id: 5,
+                id: 3,
                 message: action.newPostText,
                 likesCount: 10,
                 dislikesCount: 2
-            }
+            };
             return {
                 ...state,
                 posts: [...state.posts, newPost],
-                newPostsText: ''
+                newPostText: ''
             };
         }
         case SET_USER_PROFILE: {
@@ -50,7 +51,7 @@ const profileReducer = (state = initialState, action: any): initialStateType => 
         default:
             return state;
     }
-}
+};
 
 type addPostActionCreatorType = {
     type: typeof ADD_POST
@@ -82,12 +83,12 @@ export const savePhotoAC = (photos: photosType): savePhotoACType => ({type: SAVE
 export const setUserTC = (userId: number) => async (dispatch: any) => {
     let data = await usersAPI.getUser(userId);
     dispatch(setUserProfile(data));
-}
+};
 
 export const getUserStatus = (userId: number) => async (dispatch: any) => {
     let response = await profileAPI.getStatus(userId);
     dispatch(setUserStatus(response.data));
-}
+};
 
 export const updateUserStatus = (status: string) => async (dispatch: any) => {
     try {
@@ -99,7 +100,7 @@ export const updateUserStatus = (status: string) => async (dispatch: any) => {
         debugger
         console.log(error)
     }
-}
+};
 
 // 97
 export const saveProfile = (profile: profileType) => async (dispatch: any, getState: any) => {
@@ -111,7 +112,7 @@ export const saveProfile = (profile: profileType) => async (dispatch: any, getSt
         dispatch(stopSubmit('edit-profile', {_error: response.data.messages[0]}));
         return Promise.reject(response.data.messages[0]);
     }
-}
+};
 
 //96
 export const savePhoto = (file: any) => async (dispatch: any) => {

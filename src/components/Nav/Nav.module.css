@@ -1,8 +1,14 @@
 /* navigation bar */
 .nav {
+    margin-top: -2px;
     grid-area: n;
-    background-color: #ffc177;
+    background-color: cornflowerblue;
     padding: 20px;
+    text-align: center;
+    font-size: 15px;
+    border: 2px solid white;
+    font-family: "Century Gothic";
+    line-height: 30px;
 }
 
 a {
