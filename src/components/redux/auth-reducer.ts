@@ -1,5 +1,7 @@
-import { authAPI, ResultCodeForCaptcha, ResultCodesEnum, securityAPI } from '../../api/api';
+import { ResultCodeForCaptcha, ResultCodesEnum} from '../../api/api';
 import { stopSubmit } from 'redux-form';
+import { authAPI } from "../../api/auth-api";
+import { securityAPI } from "../../api/security-api";
 
 const SET_USER_DATA = 'SET-USER-DATA';
 const GET_CAPTCHA = 'GET-CAPTCHA';
@@ -96,8 +98,8 @@ export const logout = () => async (dispatch: any) => {
 //98
 
 export const getCaptchaUrl = () => async (dispatch: any) => {
-    let response = await securityAPI.getCaptchaURL();
-    const captchaUrl = response.data.url;
+    let data = await securityAPI.getCaptchaURL();
+    const captchaUrl = data.url;
     dispatch(getCaptchaAC(captchaUrl));
 }
 

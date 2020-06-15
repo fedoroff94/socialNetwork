@@ -1,6 +1,7 @@
-import { profileAPI, usersAPI } from '../../api/api';
 import { stopSubmit } from 'redux-form';
 import { photosType, postType, profileType } from '../../types/types';
+import { usersAPI } from "../../api/users-api";
+import { profileAPI } from "../../api/profile-api";
 
 const ADD_POST = 'ADD-POST';
 const SET_USER_PROFILE = 'SET-USER-PROFILE';
@@ -16,7 +17,7 @@ let initialState = {
     profile: null as profileType | null,
     status: '',
     newPostText: ''
-};
+}
 
 export type initialStateType = typeof initialState;
 
@@ -51,7 +52,7 @@ const profileReducer = (state = initialState, action: any): initialStateType => 
         default:
             return state;
     }
-};
+}
 
 type addPostActionCreatorType = {
     type: typeof ADD_POST
@@ -81,19 +82,19 @@ export const deletePostAC = (postId: number): deletePostACType => ({type: DELETE
 export const savePhotoAC = (photos: photosType): savePhotoACType => ({type: SAVE_PHOTO, photos});
 
 export const setUserTC = (userId: number) => async (dispatch: any) => {
-    let data = await usersAPI.getUser(userId);
+    let data = await profileAPI.getUser(userId);
     dispatch(setUserProfile(data));
 };
 
 export const getUserStatus = (userId: number) => async (dispatch: any) => {
-    let response = await profileAPI.getStatus(userId);
-    dispatch(setUserStatus(response.data));
+    let data = await profileAPI.getStatus(userId);
+    dispatch(setUserStatus(data));
 };
 
 export const updateUserStatus = (status: string) => async (dispatch: any) => {
     try {
-        let response = await profileAPI.updateStatus(status);
-        if (response.data.resultCode === 0) {
+        let data = await profileAPI.updateStatus(status);
+        if (data.resultCode === 0) {
             dispatch(setUserStatus(status));
         }
     } catch (error) {
@@ -116,9 +117,9 @@ export const saveProfile = (profile: profileType) => async (dispatch: any, getSt
 
 //96
 export const savePhoto = (file: any) => async (dispatch: any) => {
-    let response = await profileAPI.savePhoto(file);
-    if (response.data.resultCode === 0) {
-        dispatch(savePhotoAC(response.data.data.photos));
+    let data = await profileAPI.savePhoto(file);
+    if (data.resultCode === 0) {
+        dispatch(savePhotoAC(data.data.photos));
     }
 }
 

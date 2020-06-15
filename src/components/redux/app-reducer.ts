@@ -1,22 +1,16 @@
 import {setUserDataTC} from "./auth-reducer";
+import { InferActionsType } from "./redux-store";
 
-const SET_INITIALIZED = 'SET-INITIALIZED';
+export type InitialStateType = typeof initialState;
+type ActionsType = InferActionsType<typeof actions>;
 
-export type InitialStateType = {
-    initialized: boolean
-}
-
-type SetInitializedActionType = {
-    type: typeof SET_INITIALIZED
-}
-
-let initialState: InitialStateType = {
+let initialState = {
     initialized: false
 };
 
-const appReducer = (state = initialState, action: SetInitializedActionType): InitialStateType => {
+const appReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
-        case SET_INITIALIZED:
+        case 'SET-INITIALIZED':
             return {
                 ...state,
                 initialized: true
@@ -26,13 +20,16 @@ const appReducer = (state = initialState, action: SetInitializedActionType): Ini
     }
 };
 
-export const setInitialized = (): SetInitializedActionType => ({type: SET_INITIALIZED}); //actionCreator
+
+export const actions = {
+    setInitialized: () => ({type: 'SET-INITIALIZED'} as const)
+}
 
 export const initializeApp = () => (dispatch: any) => { //thunkCreator
     let promise = dispatch(setUserDataTC());
     Promise.all([promise])
         .then(() => {
-            dispatch(setInitialized());
+            dispatch(actions.setInitialized());
     })
 };
 
