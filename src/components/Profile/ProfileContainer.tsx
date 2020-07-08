@@ -2,27 +2,47 @@ import React from 'react';
 import Profile from './Profile';
 import {connect} from 'react-redux';
 import {setUserTC, getUserStatus, updateUserStatus, saveProfile, savePhoto} from '../redux/profile-reducer';
-import {withRouter} from 'react-router-dom';
+import {withRouter, RouteComponentProps} from 'react-router-dom';
 import {withAuthRedirect} from '../../HOC/withAuthRedirect';
 import {compose} from 'redux';
+import { appStateType } from "../redux/redux-store";
+import { profileType } from "../../types/types";
 
+type MapPropsType = ReturnType<typeof mapStateToProps>
+type DispatchPropsType = {
+    setUserTC: (userId: number) => void
+    getUserStatus: (userId: number) => void
+    updateUserStatus: (status: string) => void
+    saveProfile: (profile: profileType | null) => Promise<any>
+    savePhoto: (file: File) => void
+}
 
-class ProfileContainer extends React.Component {
+type PathParamsType = {
+    userId: string
+}
+
+type PropsType = MapPropsType & DispatchPropsType & RouteComponentProps<PathParamsType>
+
+class ProfileContainer extends React.Component<PropsType> {
 
     refreshProfile = () => {
-        let userId = this.props.match.params.userId;
+        let userId: number | null = +this.props.match.params.userId;
         if (!userId) {
             userId = this.props.userId;
         }
-        this.props.setUserTC(userId);
-        this.props.getUserStatus(userId);
+        if(!userId){
+            console.error('UserId shuld be in URIparams or in state');
+        } else {
+            this.props.setUserTC(userId);
+            this.props.getUserStatus(userId);
+        }
     }
 
     componentDidMount() {
         this.refreshProfile();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps: PropsType, prevState: PropsType) {
         if (this.props.match.params.userId != prevProps.match.params.userId) {
             this.refreshProfile();
         }
@@ -40,7 +60,7 @@ class ProfileContainer extends React.Component {
 ///High order Component --- HOC
 // let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
 
-let mapStateToProps = (state) => ({
+let mapStateToProps = (state: appStateType) => ({
     profile: state.profilePage.profile,
     status: state.profilePage.status,
     authorized: state.auth.isAuth,
@@ -49,7 +69,7 @@ let mapStateToProps = (state) => ({
 
 // let WithUrlDataContainerComponent = withRouter(AuthRedirectComponent)
 
-export default compose(
+export default compose<React.ComponentType>(
     connect(mapStateToProps, {setUserTC, getUserStatus, updateUserStatus, saveProfile, savePhoto}),
     withRouter,
     withAuthRedirect

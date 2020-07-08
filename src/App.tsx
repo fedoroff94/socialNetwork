@@ -11,16 +11,22 @@ import {connect, Provider} from "react-redux";
 import {compose} from "redux";
 import {initializeApp} from "./components/redux/app-reducer";
 import Preloader from "./assets/common/Preloader/Preloader";
-import store from "./components/redux/redux-store";
+import store, { appStateType } from "./components/redux/redux-store";
 import {withSuspense} from "./HOC/withSuspense";
-// import DialogsContainer from './components/Dialogs/DialogsContainer.tsx';
 
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
-const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer.tsx'));
+const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 
-class App extends React.Component {
+type MapPropsType = ReturnType<typeof mapStateToProps>;
+type DispatchPropsType = {
+    initializeApp: () => void
+}
 
-    catchAllUnhandledErrors = (reason, promise) => {
+const SuspendedDialogs =  withSuspense(DialogsContainer);
+
+class App extends React.Component<MapPropsType & DispatchPropsType> {
+
+    catchAllUnhandledErrors = (e: PromiseRejectionEvent) => {
         alert('Error!!! A lot of symbols!!!');
     };
 
@@ -37,6 +43,7 @@ class App extends React.Component {
         if (!this.props.initialized) {
             return <Preloader/>
         }
+        // @ts-ignore
         return (
             <div className='app-wrapper'>
                 <HeaderContainer/>
@@ -48,9 +55,9 @@ class App extends React.Component {
                         </React.Suspense>
                     }}/>
 
-                    <Route path='/dialogs' render={withSuspense(DialogsContainer)}/>
+                    <Route path='/dialogs' render={ () => <SuspendedDialogs/>}/>
                     <Route path='/news' render={() => <NewsContainer/>}/>
-                    <Route path='/users' render={() => <UsersContainer title={'Samurais'}/>}/>
+                    <Route path='/users' render={() => <UsersContainer/>}/>
                     <Route path='/login' render={() => <Login/>}/>
 
                 </div>
@@ -59,15 +66,15 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: appStateType) => ({
     initialized: state.app.initialized
 });
 
-const AppContainer = compose(
+const AppContainer = compose<React.ComponentType>(
     withRouter,
     connect(mapStateToProps, {initializeApp}))(App);
 
-const SamuraiJSApp = (props) => {
+const SamuraiJSApp: React.FC = () => {
     return <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Provider store={store}>
             <AppContainer/>

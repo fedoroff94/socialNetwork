@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, InjectedFormProps, reduxForm } from "redux-form";
-import { CreateField, Input } from "../../assets/common/FormsControls/FormsControls";
+import { CreateField, GetStringKeys, Input } from "../../assets/common/FormsControls/FormsControls";
 import {MaxLengthCreator, required} from "../../utils/validators/validstors";
 import {connect} from "react-redux";
 import {getCaptchaUrl, login} from "../redux/auth-reducer";
@@ -9,7 +9,6 @@ import classes from './Login.module.css';
 import { appStateType } from "../redux/redux-store";
 
 const maxLength30 = MaxLengthCreator(30);
-
 
 type LoginFormOunProps = {
     captchaUrl: string | null
@@ -27,8 +26,6 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormValuesType, LoginFormOunPro
             {/*       name={'Email'}/>*/}
 
             {captchaUrl && <img src={captchaUrl}/>}
-
-
             {error &&
             <div className={classes.summaryError}>
                 {error}
@@ -59,7 +56,7 @@ export type LoginFormValuesType = {
     captcha: string
 }
 
-type LoginFormKeysType = Extract<keyof LoginFormValuesType, string>
+export type LoginFormKeysType = GetStringKeys<LoginFormValuesType>
 
 const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
 

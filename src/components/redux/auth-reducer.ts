@@ -1,19 +1,8 @@
 import { ResultCodeForCaptcha, ResultCodesEnum} from '../../api/api';
-import { stopSubmit } from 'redux-form';
+import { FormAction, stopSubmit } from 'redux-form';
 import { authAPI } from "../../api/auth-api";
 import { securityAPI } from "../../api/security-api";
-
-const SET_USER_DATA = 'SET-USER-DATA';
-const GET_CAPTCHA = 'GET-CAPTCHA';
-
-
-export type InitialStateType1 = {
-    id: number | null
-    email: string | null
-    login: string | null
-    isAuth: boolean,
-    captchaUrl: string | null
-}
+import { BaseThunkType, InferActionsType } from "./redux-store";
 
 let initialState = {
     id: null as number | null,
@@ -23,56 +12,34 @@ let initialState = {
     captchaUrl: null as string | null
 };
 
-export type initialStateType = typeof initialState;
-
-const authReducer = (state = initialState, action: any): initialStateType => {
+const authReducer = (state = initialState, action: ActionsType): initialStateType => {
     switch (action.type) {
-        case SET_USER_DATA:
-        case GET_CAPTCHA:
+        case 'SET-USER-DATA':
+        case 'GET-CAPTCHA':
             return {
                 ...state,
                 ...action.payload
-            }
+            };
         default:
             return state;
     }
 }
 
-type SetUserDataPayloadType = {
-    id: number | null
-    login: string |  null
-    email: string | null
-    isAuth: boolean
+export const actions = {
+    setUserData: (id: number | null, login: string | null, email: string | null, isAuth: boolean) =>
+        ({type: 'SET-USER-DATA', payload: {id, login, email, isAuth}} as const),
+    getCaptchaAC: (captchaUrl: string)  => ({type: 'GET-CAPTCHA', payload: {captchaUrl}} as const)
 }
 
-type SetUserDataType = {
-    type: typeof SET_USER_DATA
-    payload: SetUserDataPayloadType
-}
-
-export const setUserData = (id: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataType =>
-    ({type: SET_USER_DATA, payload: {id, login, email, isAuth}}); //actionCreator
-
-type PayloadType = {
-    captchaUrl: string
-}
-
-type GetCaptchaType = {
-    type: typeof GET_CAPTCHA
-    payload: PayloadType
-}
-
-export const getCaptchaAC = (captchaUrl: string): GetCaptchaType  => ({type: GET_CAPTCHA, payload: {captchaUrl}});
-
-export const setUserDataTC = () => async (dispatch: any) => {
+export const setUserDataTC = (): ThunkType => async (dispatch) => {
     let resData = await authAPI.authMe();
     if (resData.resultCode === ResultCodesEnum.Success) {
         let {id, login, email} = resData.data;
-        dispatch(setUserData(id, login, email, true));
+        dispatch(actions.setUserData(id, login, email, true));
     }
 }
 
-export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => {
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string): ThunkType => {
     return async (dispatch: any) => {
         let loginData = await authAPI.login(email, password, rememberMe, captcha);
         if (loginData.resultCode === ResultCodesEnum.Success) {
@@ -88,19 +55,23 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
     };
 }
 
-export const logout = () => async (dispatch: any) => {
+export const logout = (): ThunkType => async (dispatch: any) => {
     let response = await authAPI.logout()
     if (response.data.resultCode === ResultCodesEnum.Success) {
-        dispatch(setUserData(null, null, null, false));
+        dispatch(actions.setUserData(null, null, null, false));
     }
 }
 
 //98
 
-export const getCaptchaUrl = () => async (dispatch: any) => {
+export const getCaptchaUrl = (): ThunkType => async (dispatch: any) => {
     let data = await securityAPI.getCaptchaURL();
     const captchaUrl = data.url;
-    dispatch(getCaptchaAC(captchaUrl));
+    dispatch(actions.getCaptchaAC(captchaUrl));
 }
 
 export default authReducer;
+
+export type initialStateType = typeof initialState;
+type ActionsType = InferActionsType<typeof actions>
+type ThunkType = BaseThunkType<ActionsType | FormAction>

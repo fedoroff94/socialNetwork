@@ -1,8 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {CreateField, Input} from "../../../assets/common/FormsControls/FormsControls";
-import {MaxLengthCreator} from "../../../utils/validators/validstors";
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { MaxLengthCreator } from "../../../utils/validators/validstors";
 
-const ProfileStatusWithHooks = (props) => {
+type PropsType = {
+    status: string
+    updateUserStatus: (status: string) => void
+}
+
+const ProfileStatusWithHooks: React.FC<PropsType> = (props) => {
 
     useEffect(() => {
         setStatus(props.status)
@@ -12,7 +16,7 @@ const ProfileStatusWithHooks = (props) => {
     let [status, setStatus] = useState(props.status);
 
     const activateEditMode = () => {
-    setEditMode(true);
+        setEditMode(true);
     }
 
     const diactivateEditMode = () => {
@@ -20,7 +24,7 @@ const ProfileStatusWithHooks = (props) => {
         props.updateUserStatus(status);
     }
 
-    const onStatusChange = (e) => {
+    const onStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
         setStatus(e.currentTarget.value);
     }
 
@@ -29,10 +33,10 @@ const ProfileStatusWithHooks = (props) => {
     return (
         <div>
             {!editMode &&
-                <div>
-                    <span><b>Status: </b></span>
-                    <span onDoubleClick={activateEditMode}>{props.status || '---'}</span>
-                </div>
+            <div>
+                <span><b>Status: </b></span>
+                <span onDoubleClick={activateEditMode}>{props.status || '---'}</span>
+            </div>
             }
             {editMode &&
             <div>

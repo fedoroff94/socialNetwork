@@ -1,16 +1,18 @@
-import React from 'react';
-import profileReducer, {addPostActionCreator, deletePostAC} from "./profile-reducer";
+import profileReducer, {actions} from "./profile-reducer";
 
 let state = {
     posts: [
-        {id: '1', message: 'Hi, how are you?', likesCount: '12', dislikesCount: '3'},
-        {id: '2', message: 'It is my first post', likesCount: '11', dislikesCount: '4'}
-    ]
+        {id: 1, message: 'The first post', likesCount: 1, dislikesCount: 1},
+        {id: 2, message: 'The second post', likesCount: 2, dislikesCount: 2}
+    ],
+    profile: null,
+    status: '',
+    newPostText: ''
 };
 
 it('new posts length is correct', () => {
     // data test
-    let action = addPostActionCreator('IT-KAMASUTRA.COM');
+    let action = actions.addPostActionCreator('IT-KAMASUTRA.COM');
 
     // action
     let newState = profileReducer(state, action);
@@ -23,7 +25,7 @@ it('new posts length is correct', () => {
 
 it('new post name should be correct', () => {
     // data test
-    let action = addPostActionCreator('IT-KAMASUTRA.COM');
+    let action = actions.addPostActionCreator('IT-KAMASUTRA.COM');
 
     // action
     let newState = profileReducer(state, action);
@@ -35,7 +37,7 @@ it('new post name should be correct', () => {
 
 it('length after deleting should be decremented', () => {
     // data test
-    let action = deletePostAC(1);
+    let action = actions.deletePostAC(1);
 
     // action
     let newState = profileReducer(state, action);

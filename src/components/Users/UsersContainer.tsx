@@ -56,7 +56,7 @@ class UsersContainer extends React.Component<PropsType> {
 
     render() {
         return <>
-            <h2>{this.props.title}</h2>
+            <h2>{this.props.title}</h2> !!!
             <div className='preloader'>{this.props.isFetching
                 ? <Preloader/>
                 : null}
@@ -88,8 +88,7 @@ let mapStateToProps = (state: appStateType): MapStatePropsType => { // use selec
     }
 }
 
-export default compose(
-    // <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultRootState>
+export default compose<React.ComponentType>(
     connect<MapStatePropsType, MapDispatchPropsType, ownPropsType, appStateType>(mapStateToProps, {
         follow, unfollow,
         getUsers
